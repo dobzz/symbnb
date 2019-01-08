@@ -14,6 +14,11 @@
                 <strong>{{ad.rooms}} chambres</strong>pour <strong>{{ad.price}}&euro;</strong>par nuit
             </p>
             <a href="#" class="btn btn-primary">Réserver !</a>
+            {% if app.user and app.user == ad.author %}
+                <a href="{{ path('ads_edit', {'slug': ad.slug}) }}" class="btn btn-secondary">Modifier mon annonce</a>
+
+                <a href="{{ path('ads_delete', {'slug': ad.slug}) }}" class="btn btn-danger" onclick="return confirm(`Etes vous sur de vouloir supprimer l'annonce ?`)">Supprimer l'annonce</a>
+            {% endif %}
         </div>
     </div>
 
@@ -50,17 +55,20 @@
             </div>
 
             <div class="col">
+            {% set a = ad.author %}
                 <div class="row">
-                    <div class="col-4">
-                        <img src="http://placehold.it/64x64" alt="Avatar">
+                    <div class="col-3">
+                        <a href="{{ path('user_show', {'slug': a.slug}) }}">
+                            <img src="{{ a.picture }}" class="avatar avatar-medium" alt="Avatar de {{ a.fullName}}">
+                        </a>
                     </div>
                     <div class="col">
-                        <h3>Nom de la personne</h3>
-                        <span class="badge badge-primary">3 Annonces</span>
+                        <a href="{{ path('user_show', {'slug': a.slug}) }}">
+                            <h3>{{ a.fullName}}</h3>
+                        </a>
+                        <span class="badge badge-primary">{{ a.ads | length }} annonces</span>
                     </div>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit mollitia laboriosam deleniti voluptatum repellat nobis magni ducimus non odio perferendis quam amet quasi ipsa, reprehenderit dignissimos earum facere ex recusandae?</p>
-                    <p>Optio, aliquam! Laborum a, delectus inventore non iure reprehenderit temporibus necessitatibus officiis quasi aperiam, voluptas iusto error repudiandae facere. Soluta unde alias recusandae aliquam magni et nulla quam error quaerat?</p>
-                    <p>Temporibus ducimus tempore laborum explicabo sed ex nulla commodi dignissimos perspiciatis, ipsum repellat reprehenderit odio culpa quo qui provident veritatis odit ratione necessitatibus totam labore quas vitae. Aspernatur, obcaecati pariatur?</p>
+                    {{ a.description | raw }}
                 </div>
             </div>
         </div>
