@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vous n'avez pas les droits nécessaire pour accéder à cette ressource{% endblock %}
+
+{% block body %}
+       <div class="container">
+          <h1>Oups ! Vous ne pouvez pas accéder à cette ressource.</h1>
+          <p>Vous pouvez retourner à l'accueil pour voir nos dernières annonces !</p>
+          <a href="{path('homepage')}" class="btn btn-primary">Retour à l'accueil</a>
+          <a href="{path('ads_index')}" class="btn btn-success">Nos annonces</a>
+       </div> 
+
+
+{% endblock %}
