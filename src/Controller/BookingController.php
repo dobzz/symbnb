@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Ad;
 use App\Entity\Booking;
+use App\Entity\Comment;
 use App\Form\BookingType;
+use App\Form\CommentType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,7 +22,9 @@ class BookingController extends AbstractController
     public function book(Ad $ad, Request $request, ObjectManager $manager)
     {
         $booking = new Booking();
-        $form = $this->createForm(BookingType::class, $booking);
+        $form = $this->createForm(BookingType::class, $booking, [
+            'validations_groups' => ["Default", "front"] //possibilité d'utiliser les validations groups directement dans la configuration du formulaire
+        ]);
 
         $form->handleRequest($request);
 
@@ -56,12 +60,34 @@ class BookingController extends AbstractController
      * 
      *
      * @param Booking $booking
+     * @param Request $request
+     * @param ObjectManager $manager
      * @return Response
      */
-    public function show(Booking $booking){
+    public function show(Booking $booking, Request $request, ObjectManager $manager){
         //$booking = new Booking();
+        $comment = new Comment();
+
+        $form = $this->createForm(CommentType::class, $comment);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $comment->setAd($booking->getAd())
+                    ->setAuthor($this->getUser());
+                
+            $manager->persist($comment);
+            $manager->flush();
+
+            $this->addFlash(
+                'success',
+                "Votre commentaire a bien été pris en compte !"
+            );
+        }
+
         return $this->render('booking/show.html.twig', [
-            'booking' => $booking
+            'booking' => $booking,
+            'form' => $form->createView()
         ]);
     }
 }
