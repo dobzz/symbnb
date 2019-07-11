@@ -1,5 +1,7 @@
-div.container{
-    margin-top: 20px;
+@import url('./bootstrap.min.css');
+
+div.container, .container-fluid {
+    margin-top: 25px;
 }
 
 div.ad-title{
