@@ -6,7 +6,7 @@
 # startpage (path "/") because otherwise Apache will apply the rewritting rules
 # to each configured DirectoryIndex file (e.g. index.php, index.html, index.pl).
 DirectoryIndex index.php
-#DirectoryIndex app_dev.php
+#DirectoryIndex index_dev.php
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
@@ -41,18 +41,18 @@ DirectoryIndex index.php
     RewriteRule ^cpv-\d+\/(.+)$ $1 [L]
 
     RewriteCond %{REQUEST_FILENAME} -f
-    #RewriteRule ^(.*)$ app_dev.php [QSA,L]
-    RewriteRule ^(.*)$ app.php [QSA,L]
+    #RewriteRule ^(.*)$ index_dev.php [QSA,L]
+    RewriteRule ^(.*)$ index.php[QSA,L]
 
     # The following rewrites all other queries to the front controller. The
     # condition ensures that if you are using Apache aliases to do mass virtual
     # hosting, the base path will be prepended to allow proper resolution of the
-    # app.php file; it will work in non-aliased environments as well, providing
+    # index.phpfile; it will work in non-aliased environments as well, providing
     # a safe, one-size fits all solution.
     RewriteCond %{REQUEST_URI}::$1 ^(/.+)(.+)::\2$
     RewriteRule ^(.*) - [E=BASE:%1]
-    #RewriteRule .? %{ENV:BASE}app_dev.php [L]
-    RewriteRule .? %{ENV:BASE}app.php [L]
+    #RewriteRule .? %{ENV:BASE}index_dev.php [L]
+    RewriteRule .? %{ENV:BASE}index.php[L]
 </IfModule>
 
 <IfModule !mod_rewrite.c>
@@ -60,7 +60,7 @@ DirectoryIndex index.php
         # When mod_rewrite is not available, we instruct a temporary redirect of
         # the startpage to the front controller explicitly so that the website
         # and the generated links can still be used.
-        #RedirectMatch 302 ^/$ /app_dev.php/
+        #RedirectMatch 302 ^/$ /index_dev.php/
         RedirectMatch 302 ^/$ /app.php/
         # RedirectTemp cannot be used instead
     </IfModule>
